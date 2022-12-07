@@ -9,15 +9,15 @@ import {
   collection,
   doc,
   setDoc,
-  updateDoc,
-  serverTimestamp
+  serverTimestamp,
+  DocumentData,
+  DocumentReference
 } from 'firebase/firestore'
 import { Loading } from '../components/Loading'
 import { Login } from './login'
 
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useEffect } from 'react'
-
 import type { AppProps } from 'next/app'
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
@@ -34,7 +34,10 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
     }
   }, [user])
 
-  const setNewUser = async (newUserRef: any, data: any) => {
+  const setNewUser = async (
+    newUserRef: DocumentReference<DocumentData>,
+    data: unknown
+  ): Promise<void> => {
     await setDoc(newUserRef, data)
   }
 
