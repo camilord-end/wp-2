@@ -8,9 +8,29 @@ import SearchIcon from '@mui/icons-material/Search'
 import TextField from '@mui/material/TextField'
 import * as EmailValidator from 'email-validator'
 
-import { auth } from '../firebase'
+import { auth, db } from '../firebase'
+import {
+  addDoc,
+  CollectionReference,
+  collection,
+  query,
+  where,
+  DocumentData
+} from 'firebase/firestore'
+import { useCollection } from 'react-firebase-hooks/firestore'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { Chat } from './Chat'
+import { chatAlreadyExist } from '../utils/chatAlreadyExist'
 
 export const Sidebar = () => {
+  const [user] = useAuthState(auth)
+  const collectionRef = collection(db, 'chats')
+  const userQuery = query(
+    collectionRef,
+    where('users', 'array-contains', user?.email)
+  )
+  const [chatsSnapShot] = useCollection(userQuery)
+
   const headerStyles = {
     position: 'sticky',
     display: 'flex',
@@ -24,20 +44,41 @@ export const Sidebar = () => {
   }
   const avatarStyles = { cursor: 'pointer', '&:hover': { opacity: 0.8 } }
 
-  const createChat = () => {
-    const input = prompt(
+  const createChat = (): void | null => {
+    const input: string | null = prompt(
       'Please enter an email addres for the user to chat with: '
     )
     if (!input) return null
-    if (EmailValidator.validate(input)) {
-      //todo- need to add the chat db collection
+    if (
+      EmailValidator.validate(input) &&
+      !chatAlreadyExist(input, chatsSnapShot) &&
+      input !== user?.email
+    ) {
+      addChatToDB(collectionRef, {
+        users: [user?.email, input]
+      })
     }
+  }
+
+  const addChatToDB = async (
+    newUserRef: CollectionReference<DocumentData>,
+    data: unknown
+  ) => {
+    await addDoc(newUserRef, data)
   }
 
   return (
     <Box>
       <Box sx={headerStyles}>
-        <Avatar onClick={() => auth.signOut()} sx={avatarStyles} />
+        <Avatar
+          sx={avatarStyles}
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
+          src={user?.photoURL}
+          referrerPolicy='no-referrer'
+          onClick={() => auth.signOut()}
+          variant='rounded'
+        />
         <Box>
           <IconButton>
             <ChatIcon />
@@ -64,7 +105,11 @@ export const Sidebar = () => {
       >
         Start a new Chat
       </Button>
-      {/* List of active chats */}
+      <Box>
+        {chatsSnapShot?.docs.map((chat) => (
+          <Chat key={chat.id} id={chat.id} users={chat.data().users} />
+        ))}
+      </Box>
     </Box>
   )
 }
