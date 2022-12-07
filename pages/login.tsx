@@ -4,6 +4,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Head from 'next/head'
 import Image from 'next/image'
+import Typography from '@mui/material/Typography'
 
 export const Login = (): JSX.Element => {
   const containerStyles = {
@@ -46,9 +47,12 @@ export const Login = (): JSX.Element => {
           priority
           style={{ marginBottom: '40px' }}
         />
-        <Button onClick={signIn} variant='outlined' color='inherit'>
+        <Button onClick={signIn} variant='outlined' color='success'>
           Sign in with google
         </Button>
+        <Typography variant='caption' color='green' sx={{ mt: '10px' }}>
+          to start using the chat
+        </Typography>
       </Box>
     </Box>
   )
