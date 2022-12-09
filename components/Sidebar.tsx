@@ -1,9 +1,8 @@
+import { SidebarHeaderButtons } from './SidebarHeaderButtons'
+
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
-import ChatIcon from '@mui/icons-material/Chat'
-import IconButton from '@mui/material/IconButton'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
 import SearchIcon from '@mui/icons-material/Search'
 import TextField from '@mui/material/TextField'
 import * as EmailValidator from 'email-validator'
@@ -80,12 +79,7 @@ export const Sidebar = () => {
           variant='rounded'
         />
         <Box>
-          <IconButton>
-            <ChatIcon />
-          </IconButton>
-          <IconButton>
-            <MoreVertIcon />
-          </IconButton>
+          <SidebarHeaderButtons />
         </Box>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', p: '10px' }}>
