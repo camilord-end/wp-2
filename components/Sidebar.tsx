@@ -1,25 +1,14 @@
 import { SidebarHeaderButtons } from './SidebarHeaderButtons'
-
-import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import SearchIcon from '@mui/icons-material/Search'
 import TextField from '@mui/material/TextField'
-import * as EmailValidator from 'email-validator'
-
 import { auth, db } from '../firebase'
-import {
-  addDoc,
-  CollectionReference,
-  collection,
-  query,
-  where,
-  DocumentData
-} from 'firebase/firestore'
+import { collection, query, where } from 'firebase/firestore'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { Chat } from './Chat'
-import { chatAlreadyExist } from '../utils/chatAlreadyExist'
+import Image from 'next/image'
+import { StartNewChat } from './StartNewChat'
 
 export const Sidebar = () => {
   const [user] = useAuthState(auth)
@@ -41,42 +30,18 @@ export const Sidebar = () => {
     padding: '15px',
     borderBottom: '1px solid whitesmoke'
   }
-  const avatarStyles = { cursor: 'pointer', '&:hover': { opacity: 0.8 } }
-
-  const createChat = (): void | null => {
-    const input: string | null = prompt(
-      'Please enter an email addres for the user to chat with: '
-    )
-    if (!input) return null
-    if (
-      EmailValidator.validate(input) &&
-      !chatAlreadyExist(input, chatsSnapShot) &&
-      input !== user?.email
-    ) {
-      addChatToDB(collectionRef, {
-        users: [user?.email, input]
-      })
-    }
-  }
-
-  const addChatToDB = async (
-    newUserRef: CollectionReference<DocumentData>,
-    data: unknown
-  ) => {
-    await addDoc(newUserRef, data)
-  }
-
   return (
     <Box>
       <Box sx={headerStyles}>
-        <Avatar
-          sx={avatarStyles}
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          //@ts-ignore
-          src={user?.photoURL}
+        <Image
+          src={user?.photoURL ? user.photoURL : 'xd'}
+          alt='user photo'
+          width={50}
+          height={50}
+          priority
+          style={{ cursor: 'pointer', borderRadius: '5px' }}
           referrerPolicy='no-referrer'
           onClick={() => auth.signOut()}
-          variant='rounded'
         />
         <Box>
           <SidebarHeaderButtons />
@@ -91,14 +56,7 @@ export const Sidebar = () => {
           sx={{ flex: 1 }}
         />
       </Box>
-      <Button
-        variant='text'
-        color='success'
-        onClick={createChat}
-        sx={{ width: '100%' }}
-      >
-        Start a new Chat
-      </Button>
+      <StartNewChat />
       <Box>
         {chatsSnapShot?.docs.map((chat) => (
           <Chat key={chat.id} id={chat.id} users={chat.data().users} />
