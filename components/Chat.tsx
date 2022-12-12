@@ -2,6 +2,8 @@ import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { collection, query, where } from 'firebase/firestore'
+import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { auth, db } from '../firebase'
@@ -19,6 +21,12 @@ export const Chat = ({ id, users }: UserProps): JSX.Element => {
   const userQuery = query(collectionRef, where('email', '==', recipientEmail))
   const [recipientSnapShot] = useCollection(userQuery)
   const recipient = recipientSnapShot?.docs?.[0]?.data()
+  const router = useRouter()
+
+  const enterChat = () => {
+    //
+    router.push(`/chat/${id}`)
+  }
 
   return (
     <Box
@@ -32,15 +40,16 @@ export const Chat = ({ id, users }: UserProps): JSX.Element => {
           backgroundColor: '#e9eaeb'
         }
       }}
+      onClick={enterChat}
     >
       {recipient ? (
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
-        <Avatar
-          sx={{ m: '5px', mr: '15px' }}
+        <Image
+          style={{ margin: '5px', marginRight: '15px', borderRadius: '5px' }}
+          alt='contact photo'
           src={recipient.photoUrl}
+          width={40}
+          height={40}
           referrerPolicy='no-referrer'
-          variant='rounded'
         />
       ) : (
         <Avatar sx={{ m: '5px', mr: '15px' }} variant='rounded' />
