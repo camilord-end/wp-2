@@ -31,7 +31,18 @@ export const Sidebar = () => {
     borderBottom: '1px solid whitesmoke'
   }
   return (
-    <Box>
+    <Box
+      sx={{
+        flex: '0.45',
+        borderRight: '1px solid whitesmoke',
+        height: '100vh',
+        minWidth: '300px',
+        maxWidth: '350px',
+        overflowY: 'scroll',
+        scrollbarWidth: 'none',
+        '::-webkit-scrollbar': { display: 'none' }
+      }}
+    >
       <Box sx={headerStyles}>
         <Image
           src={user?.photoURL ? user.photoURL : 'xd'}
