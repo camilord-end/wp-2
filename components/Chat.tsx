@@ -24,7 +24,6 @@ export const Chat = ({ id, users }: UserProps): JSX.Element => {
   const router = useRouter()
 
   const enterChat = () => {
-    //
     router.push(`/chat/${id}`)
   }
 
