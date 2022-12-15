@@ -1,15 +1,32 @@
 import { ChatScreen } from '../../components/ChatScreen'
 import { Sidebar } from '../../components/Sidebar'
-import { doc, getDoc, orderBy } from 'firebase/firestore'
-import { db } from '../../firebase'
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query
+} from 'firebase/firestore'
+import { auth, db } from '../../firebase'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { getRecipientEmail } from '../../utils/getRecipientEmail'
 import Box from '@mui/system/Box'
 import Head from 'next/head'
 
-const Chat = () => {
+const Chat = ({
+  chat,
+  messages
+}: {
+  chat: { id: string; users: string[] }
+  messages: string
+}) => {
+  const [user] = useAuthState(auth)
+
   return (
     <Box sx={{ display: 'flex' }}>
       <Head>
-        <title>Chat</title>
+        <title>Chat with {getRecipientEmail(chat.users, user)}</title>
       </Head>
       <Sidebar />
       <Box
@@ -17,12 +34,11 @@ const Chat = () => {
           flex: '1',
           overflow: 'scroll',
           height: '100vh',
-          '::-webkit-scrollbar': { display: 'none' },
-          '-ms-overflow-style': 'none',
-          scrollbarWidth: 'none'
+          scrollbarWidth: 'none',
+          '::-webkit-scrollbar': { display: 'none' }
         }}
       >
-        <ChatScreen />
+        <ChatScreen chat={chat} messages={messages} />
       </Box>
     </Box>
   )
@@ -33,7 +49,28 @@ export default Chat
 export async function getServerSideProps(context: any) {
   //
   const docRef = doc(db, 'chats', context.query.id)
-  const docSnap = await getDoc(docRef)
-  //
-  //const messages = docSnap.docs
+  const msgRef = collection(docRef, 'messages')
+  const q = query(msgRef, orderBy('timestamp', 'asc'))
+  const docSnap = await getDocs(q)
+  const messages = docSnap.docs
+    .map((doc) => ({
+      id: doc.id,
+      ...doc.data()
+    }))
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .map((messages: any) => ({
+      ...messages,
+      timestamp: messages.timestamp.toDate().getTime()
+    }))
+  const chatSnap = await getDoc(docRef)
+  const chat = {
+    id: chatSnap.id,
+    ...chatSnap.data()
+  }
+  return {
+    props: {
+      messages: JSON.stringify(messages),
+      chat: chat
+    }
+  }
 }
