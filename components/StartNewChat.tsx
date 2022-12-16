@@ -3,7 +3,7 @@ import { collection, query, where } from 'firebase/firestore'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { auth, db } from '../firebase'
-import { createChat } from '../utils/createChat'
+import { createChat } from '../services/createChat'
 
 export const StartNewChat = () => {
   const [user] = useAuthState(auth)

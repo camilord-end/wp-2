@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { auth, db } from '../firebase'
-import { getRecipientEmail } from '../utils/getRecipientEmail'
+import { getRecipientEmail } from '../services/getRecipientEmail'
 
 interface UserProps {
   id: string

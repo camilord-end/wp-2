@@ -6,7 +6,7 @@ import {
   QuerySnapshot
 } from 'firebase/firestore'
 import { addChatToDB } from './addChatToDB'
-import { chatAlreadyExist } from './chatAlreadyExist'
+import { chatAlreadyExist } from '../utils/chatAlreadyExist'
 
 export const createChat = (
   chatsSnapShot: QuerySnapshot<DocumentData> | undefined,

@@ -1,6 +1,6 @@
 import { Message } from './Message'
 import { HeaderIcons } from './HeaderIcons'
-import { getMessagesSnap } from '../utils/getMessagesSnap'
+import { getMessagesSnap } from '../services/getMessagesSnap'
 import { auth, db } from '../firebase'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -21,7 +21,7 @@ import {
   setDoc,
   where
 } from 'firebase/firestore'
-import { getRecipientEmail } from '../utils/getRecipientEmail'
+import { getRecipientEmail } from '../services/getRecipientEmail'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import TimeAgo from 'timeago-react'
 

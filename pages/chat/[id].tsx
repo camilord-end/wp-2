@@ -10,7 +10,7 @@ import {
 } from 'firebase/firestore'
 import { auth, db } from '../../firebase'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { getRecipientEmail } from '../../utils/getRecipientEmail'
+import { getRecipientEmail } from '../../services/getRecipientEmail'
 import Box from '@mui/system/Box'
 import Head from 'next/head'
 
