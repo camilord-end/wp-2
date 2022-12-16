@@ -5,7 +5,7 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 
 import { Loading } from '../components/Loading'
-import { Login } from './login'
+import Login from './login'
 import { auth, db } from '../firebase'
 import { setNewUser } from '../services/setNewUser'
 import { collection, doc, serverTimestamp } from 'firebase/firestore'

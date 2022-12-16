@@ -6,7 +6,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Typography from '@mui/material/Typography'
 
-export const Login = (): JSX.Element => {
+const Login = (): JSX.Element => {
   const containerStyles = {
     display: 'grid',
     placeItems: 'center',
@@ -57,3 +57,5 @@ export const Login = (): JSX.Element => {
     </Box>
   )
 }
+
+export default Login
