@@ -11,14 +11,19 @@ import InsertEmoticon from '@mui/icons-material/InsertEmoticon'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Mic from '@mui/icons-material/Mic'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   addDoc,
   collection,
   doc,
+  query,
   serverTimestamp,
-  setDoc
+  setDoc,
+  where
 } from 'firebase/firestore'
+import { getRecipientEmail } from '../utils/getRecipientEmail'
+import { useCollection } from 'react-firebase-hooks/firestore'
+import TimeAgo from 'timeago-react'
 
 export const ChatScreen = ({
   chat,
@@ -30,23 +35,42 @@ export const ChatScreen = ({
   const [user] = useAuthState(auth)
   const router = useRouter()
   const [input, setInput] = useState('')
+  const endOfMessagesRef = useRef(null)
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
   const [messagesSnap] = getMessagesSnap(router.query.id)
 
+  const scrollToBottom = () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    endOfMessagesRef.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    })
+  }
+
   const showMessages = () => {
     if (messagesSnap) {
-      return messagesSnap.docs.map((message) => (
-        <Message
-          key={message.id}
-          user={message.data().user}
-          message={{
-            ...message.data(),
-            timestamp: message.data().timestamp?.toDate().getTime()
-          }}
-        />
-      ))
+      return messagesSnap.docs.map((message) => {
+        const messageData = { ...message.data() }
+        const msg: string = messageData?.message
+        const photoURL: string = messageData?.photoURL
+        const user: string = messageData?.user
+        return (
+          <Message
+            key={message.id}
+            user={message.data().user}
+            message={{
+              message: msg,
+              photoURL: photoURL,
+              user: user,
+              timestamp: message.data().timestamp?.toDate().getTime()
+            }}
+          />
+        )
+      })
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return JSON.parse(messages).map((message: any) => (
         <Message key={message.id} user={message.user} message={message} />
       ))
@@ -62,7 +86,6 @@ export const ChatScreen = ({
     padding: '12px',
     borderBottom: '1px solid whitesmoke'
   }
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sendMessage = (e: any) => {
     e.preventDefault()
@@ -84,23 +107,46 @@ export const ChatScreen = ({
       user: user?.email,
       photoURL: user?.photoURL
     }).then(() => setInput(''))
+    scrollToBottom()
   }
+
+  const recipientEmail = getRecipientEmail(chat.users, user)
+  const [recipientSnap] = useCollection(
+    query(
+      collection(db, 'users'),
+      where('email', '==', getRecipientEmail(chat.users, user))
+    )
+  )
+
+  const recipient = recipientSnap?.docs?.[0]?.data()
 
   return (
     <Box id='chat-screen-container'>
       <Box id='header' sx={headerStyles}>
-        <Image
-          src={user?.photoURL || ''}
-          alt='contact-photo'
-          width={50}
-          height={50}
-          style={{ borderRadius: '4px' }}
-        />
+        {recipient ? (
+          <Image
+            src={recipient?.photoUrl || ''}
+            alt='contact-photo'
+            width={50}
+            height={50}
+            style={{ borderRadius: '4px' }}
+            referrerPolicy='no-referrer'
+          />
+        ) : null}
         <Box id='header-info' sx={{ ml: '15px', flex: '1' }}>
-          <Typography variant='h6'>Recipient Email</Typography>
-          <Typography variant='caption' sx={{ fontSize: '14px' }}>
-            Last Seen...
-          </Typography>
+          <Typography variant='h6'>{recipientEmail}</Typography>
+          {recipientSnap ? (
+            <Typography variant='caption'>
+              Last active:{' '}
+              {recipient?.lastSeen?.toDate() ? (
+                <TimeAgo datetime={recipient?.lastSeen?.toDate()} />
+              ) : (
+                'Unavailable'
+              )}
+            </Typography>
+          ) : (
+            <Typography variant='caption'>Loading last active...</Typography>
+          )}
         </Box>
         <HeaderIcons />
       </Box>
@@ -109,11 +155,15 @@ export const ChatScreen = ({
         sx={{
           p: '30px',
           backgroundColor: '#e5ded8',
-          minHeight: '72vh'
+          minHeight: '75vh'
         }}
       >
         {showMessages()}
-        <Box id='end-of-message'></Box>
+        <Box
+          id='end-of-message'
+          ref={endOfMessagesRef}
+          sx={{ mb: '50px' }}
+        ></Box>
       </Box>
       <Box
         id='input container'
@@ -139,7 +189,7 @@ export const ChatScreen = ({
           onChange={(e) => setInput(e.target.value)}
           sx={{
             flex: '1',
-            p: '20px',
+            p: '5px',
             ml: '15px',
             mr: '15px'
           }}
