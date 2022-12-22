@@ -1,14 +1,18 @@
+import { Chat } from './Chat'
 import { SidebarHeaderButtons } from './SidebarHeaderButtons'
-import Box from '@mui/material/Box'
-import SearchIcon from '@mui/icons-material/Search'
-import TextField from '@mui/material/TextField'
+import { StartNewChat } from './StartNewChat'
 import { auth, db } from '../firebase'
+
 import { collection, query, where } from 'firebase/firestore'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { Chat } from './Chat'
+import { useTheme } from '@mui/material/styles'
+
+import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
 import Image from 'next/image'
-import { StartNewChat } from './StartNewChat'
+import SearchIcon from '@mui/icons-material/Search'
+import TextField from '@mui/material/TextField'
 
 export const Sidebar = () => {
   const [user] = useAuthState(auth)
@@ -18,31 +22,35 @@ export const Sidebar = () => {
     where('users', 'array-contains', user?.email)
   )
   const [chatsSnapShot] = useCollection(userQuery)
-
+  const theme = useTheme()
   const headerStyles = {
     position: 'sticky',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     top: 0,
-    backgroundColor: 'white',
     zIndex: 1,
     padding: '15px',
-    borderBottom: '1px solid whitesmoke'
+    background: theme.palette.background.paper
+  }
+  const sidebarStyles = {
+    flex: '0.45',
+    height: '100vh',
+    minWidth: '300px',
+    maxWidth: '350px',
+    overflowY: 'scroll',
+    scrollbarWidth: 'none',
+    '::-webkit-scrollbar': { display: 'none' },
+    background: theme.palette.background.default
+  }
+  const utilsStyles = {
+    display: 'flex',
+    alignItems: 'center',
+    p: '10px',
+    color: theme.palette.text.primary
   }
   return (
-    <Box
-      sx={{
-        flex: '0.45',
-        borderRight: '1px solid whitesmoke',
-        height: '100vh',
-        minWidth: '300px',
-        maxWidth: '350px',
-        overflowY: 'scroll',
-        scrollbarWidth: 'none',
-        '::-webkit-scrollbar': { display: 'none' }
-      }}
-    >
+    <Box sx={sidebarStyles}>
       <Box sx={headerStyles}>
         <Image
           src={user?.photoURL ? user.photoURL : 'xd'}
@@ -58,19 +66,23 @@ export const Sidebar = () => {
           <SidebarHeaderButtons />
         </Box>
       </Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', p: '10px' }}>
-        <SearchIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+      <Divider />
+      <Box sx={utilsStyles}>
+        <SearchIcon sx={{ mr: 1, my: 0.5 }} />
         <TextField
           id='input-search'
           label='Search in chats'
-          variant='standard'
+          variant='outlined'
           sx={{ flex: 1 }}
         />
       </Box>
       <StartNewChat />
-      <Box>
+      <Box sx={{ color: theme.palette.text.primary }}>
         {chatsSnapShot?.docs.map((chat) => (
-          <Chat key={chat.id} id={chat.id} users={chat.data().users} />
+          <>
+            <Divider />
+            <Chat key={chat.id} id={chat.id} users={chat.data().users} />
+          </>
         ))}
       </Box>
     </Box>
