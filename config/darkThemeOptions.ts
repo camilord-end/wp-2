@@ -10,8 +10,11 @@ const darkThemeOptions: ThemeOptions = {
       main: '#f48fb1'
     },
     background: {
-      default: '#1d0431',
-      paper: '#3e085c'
+      default: '#0F0116',
+      paper: '#1d0431'
+    },
+    action: {
+      hover: 'rgba(233,237,239,0.05)'
     }
   }
 }

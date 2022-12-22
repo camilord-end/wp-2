@@ -10,7 +10,11 @@ const lightThemeOptions: ThemeOptions = {
       main: '#c30c4e'
     },
     background: {
-      default: '#f4e4ff'
+      default: '#f4e4ff',
+      paper: '#e6d8f0'
+    },
+    action: {
+      hover: 'rgba(30,30,30,0.05)'
     }
   }
 }
