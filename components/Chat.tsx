@@ -7,7 +7,7 @@ import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Image from 'next/image'
-
+import { useTheme } from '@mui/material/styles'
 interface UserProps {
   id: string
   users: string[]
@@ -18,7 +18,7 @@ export const Chat = ({ id, users }: UserProps): JSX.Element => {
   const [user] = useAuthState(auth)
   const recipientEmail = getRecipientEmail(users, user)
   const recipient = getRecipientSnap(recipientEmail)
-
+  const theme = useTheme()
   const enterChat = () => {
     router.push(`/chat/${id}`)
   }
@@ -30,7 +30,7 @@ export const Chat = ({ id, users }: UserProps): JSX.Element => {
     p: '15px',
     wordBreak: 'break-word',
     '&:hover': {
-      backgroundColor: '#e9eaeb'
+      backgroundColor: theme.palette.action.hover
     }
   }
 

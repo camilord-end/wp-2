@@ -2,22 +2,25 @@ import { MutableRefObject, useState } from 'react'
 import { sendMessage } from '../services/sendMessage'
 import { NextRouter } from 'next/router'
 import { User } from 'firebase/auth'
+import { useTheme } from '@mui/material/styles'
 
 import Box from '@mui/material/Box'
 import InsertEmoticon from '@mui/icons-material/InsertEmoticon'
 import Mic from '@mui/icons-material/Mic'
 import TextField from '@mui/material/TextField'
+import IconButton from '@mui/material/IconButton'
 
 export const ChatInput = ({ user, router, element }: ChatInputTypes) => {
   const [input, setInput] = useState('')
+  const { palette } = useTheme()
   const inputStyles = {
     display: 'flex',
     alignItems: 'center',
     padding: '10px',
     position: 'static',
     bottom: '0',
-    background: 'white',
-    zIndex: '50'
+    zIndex: '50',
+    background: palette.background.paper
   }
   return (
     <Box
@@ -27,11 +30,13 @@ export const ChatInput = ({ user, router, element }: ChatInputTypes) => {
       autoComplete='off'
       sx={inputStyles}
     >
-      <InsertEmoticon />
+      <IconButton>
+        <InsertEmoticon />
+      </IconButton>
       <TextField
         variant='outlined'
         id='message-input'
-        color='secondary'
+        color='primary'
         value={input}
         onChange={(e) => setInput(e.target.value)}
         sx={{
@@ -49,7 +54,9 @@ export const ChatInput = ({ user, router, element }: ChatInputTypes) => {
       >
         Send message
       </button>
-      <Mic />
+      <IconButton>
+        <Mic />
+      </IconButton>
     </Box>
   )
 }

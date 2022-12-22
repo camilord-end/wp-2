@@ -13,6 +13,8 @@ import { ChatInput } from './ChatInput'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { MessageContainer } from './MessageContainer'
+import { useTheme } from '@mui/material/styles'
+import Divider from '@mui/material/Divider'
 
 export const ChatScreen = ({
   chat,
@@ -24,24 +26,31 @@ export const ChatScreen = ({
   const [user] = useAuthState(auth)
   const router = useRouter()
   const endOfMessagesRef = useRef(null)
+  const { palette } = useTheme()
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
   const headerStyles = {
     position: 'sticky',
-    backgroundColor: 'white',
     zIndex: '50',
     top: 0,
     display: 'flex',
     alignItems: 'center',
     padding: '12px',
-    borderBottom: '1px solid whitesmoke'
+    background: palette.background.paper,
+    borderBottom: `1px solid ${palette.divider}`
   }
 
   const recipientEmail = getRecipientEmail(chat.users, user)
   const recipient = getRecipientSnap(recipientEmail)
 
   return (
-    <Box id='chat-screen-container'>
+    <Box
+      id='chat-screen-container'
+      sx={{
+        background: palette.background.default,
+        color: palette.text.primary
+      }}
+    >
       <Box id='header' sx={headerStyles}>
         {recipient ? (
           <Image
@@ -70,11 +79,13 @@ export const ChatScreen = ({
         </Box>
         <HeaderIcons />
       </Box>
+      <Divider />
       <MessageContainer
         elem={endOfMessagesRef}
         messages={messages}
         router={router}
       />
+      <Divider />
       <ChatInput user={user} router={router} element={endOfMessagesRef} />
     </Box>
   )
