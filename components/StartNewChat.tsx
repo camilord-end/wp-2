@@ -16,7 +16,7 @@ export const StartNewChat = () => {
   return (
     <Button
       variant='text'
-      color='success'
+      color='primary'
       onClick={() => createChat(chatsSnapShot, user, collectionRef)}
       sx={{ width: '100%' }}
     >
