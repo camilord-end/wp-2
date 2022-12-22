@@ -51,7 +51,6 @@ export const MessageContainer = ({
       id='message-container'
       sx={{
         p: '30px',
-        backgroundColor: '#e5ded8',
         minHeight: '75vh'
       }}
     >
