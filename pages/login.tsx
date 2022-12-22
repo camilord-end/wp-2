@@ -10,8 +10,7 @@ const Login = (): JSX.Element => {
   const containerStyles = {
     display: 'grid',
     placeItems: 'center',
-    height: '100vh',
-    backgroundColor: 'lightgray'
+    height: '100vh'
   }
 
   const loginCardStyles = {
@@ -19,13 +18,11 @@ const Login = (): JSX.Element => {
     flexDirection: 'column',
     alignItems: 'center',
     p: '100px',
-    backgroundColor: 'white',
-    borderRadius: '5px',
+    borderRadius: '4px',
     border: '1px solid black'
   }
 
   const signIn = () => {
-    //
     signInWithPopup(auth, provider).catch(alert)
   }
   return (
@@ -47,10 +44,10 @@ const Login = (): JSX.Element => {
           priority
           style={{ marginBottom: '40px' }}
         />
-        <Button onClick={signIn} variant='outlined' color='success'>
+        <Button onClick={signIn} variant='contained' color='success'>
           Sign in with google
         </Button>
-        <Typography variant='caption' color='green' sx={{ mt: '10px' }}>
+        <Typography variant='caption' color='lime' sx={{ mt: '10px' }}>
           to start using the chat
         </Typography>
       </Box>
