@@ -13,6 +13,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { getRecipientEmail } from '../../services/getRecipientEmail'
 import Box from '@mui/system/Box'
 import Head from 'next/head'
+import Divider from '@mui/material/Divider'
 
 const Chat = ({
   chat,
@@ -29,6 +30,7 @@ const Chat = ({
         <title>Chat with {getRecipientEmail(chat.users, user)}</title>
       </Head>
       <Sidebar />
+      <Divider orientation='vertical' flexItem />
       <Box
         sx={{
           flex: '1',
