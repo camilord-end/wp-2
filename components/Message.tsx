@@ -3,6 +3,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '../firebase'
 import Typography from '@mui/material/Typography'
 import moment from 'moment'
+import { useTheme } from '@mui/material/styles'
 
 interface MessageTypes {
   message: string
@@ -19,7 +20,7 @@ export const Message = ({
   message: MessageTypes
 }) => {
   const [userLoggedIn] = useAuthState(auth)
-
+  const { palette } = useTheme()
   const typeOfMessage = user === userLoggedIn?.email
   //true === sender
   //false ===reciever
@@ -34,7 +35,7 @@ export const Message = ({
     position: 'relative',
     textAlign: 'right',
     ml: 'auto',
-    backgroundColor: '#dcf8c6'
+    backgroundColor: palette.mode === 'dark' ? '#006b54' : '#dcf8c6'
   }
   const reciever = {
     width: 'fit-content',
@@ -44,12 +45,12 @@ export const Message = ({
     pb: '25px',
     minWidth: '60px',
     position: 'relative',
-    backgroundColor: 'whitesmoke',
+    backgroundColor: palette.mode === 'dark' ? '#111b21' : 'whitesmoke',
     textAlign: 'left'
   }
 
   const timeStampStyles = {
-    color: 'gray',
+    color: palette.text.secondary,
     p: '10px',
     fontSize: '9px',
     position: 'absolute',
