@@ -79,10 +79,7 @@ export const Sidebar = () => {
       <StartNewChat />
       <Box sx={{ color: theme.palette.text.primary }}>
         {chatsSnapShot?.docs.map((chat) => (
-          <>
-            <Divider />
-            <Chat key={chat.id} id={chat.id} users={chat.data().users} />
-          </>
+          <Chat key={chat.id} id={chat.id} users={chat.data().users} />
         ))}
       </Box>
     </Box>
