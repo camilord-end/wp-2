@@ -47,7 +47,7 @@ const Login = (): JSX.Element => {
         <Button onClick={signIn} variant='contained' color='success'>
           Sign in with google
         </Button>
-        <Typography variant='caption' color='lime' sx={{ mt: '10px' }}>
+        <Typography variant='caption' color='success' sx={{ mt: '10px' }}>
           to start using the chat
         </Typography>
       </Box>
