@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 import moment from 'moment'
 import { useTheme } from '@mui/material/styles'
 
-interface MessageTypes {
+export interface MessageTypes {
   message: string
   photoURL: string
   timestamp: number
