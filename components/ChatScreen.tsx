@@ -27,8 +27,6 @@ export const ChatScreen = ({
   const router = useRouter()
   const endOfMessagesRef = useRef(null)
   const { palette } = useTheme()
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //@ts-ignore
   const headerStyles = {
     position: 'sticky',
     zIndex: '50',
